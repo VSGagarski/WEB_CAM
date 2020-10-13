@@ -1,35 +1,42 @@
-var stream;
-var video;
+var mediaStream;
+var videoElement;
 
 function startVideo() {
 
-    video = document.getElementById('video');
+    videoElement = document.getElementById('video');
 
     navigator.mediaDevices.enumerateDevices().then(function (devices) {
 
         var audioDefaultDev;
         devices.forEach((item) => {
+            console.log(item);
             if (item.label === "USB 2.0 PC Camera, USB Audio-Default Audio Device") {
                 audioDefaultDev = item;
             }
         });
         console.log(audioDefaultDev);
+        // if (typeof audioDefaultDev === 'undefined') {
+        //     audioDefaultDev = devices[0];
+        // }
+        console.log(audioDefaultDev);
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({
+            mediaStream = navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: {
-                    deviceId: audioDefaultDev.deviceId,
+                    deviceId: (typeof audioDefaultDev === 'undefined' ? 'default' : audioDefaultDev.deviceId),
                     autoGainControl: true,
                     echoCancellation: true,
                     noiseSuppression: true
                 }
-            }).then(function (stream) {
+            });
+            mediaStream.then(function (stream) {
                 try {
-                    video.srcObject = stream;
+                    mediaStream = stream;
+                    videoElement.srcObject = stream;
                 } catch (error) {
-                    video.src = window.URL.createObjectURL(stream);
+                    videoElement.src = window.URL.createObjectURL(stream);
                 }
-                video.play();
+                videoElement.play();
             }).catch(function (err) {
                 //log to console first 
                 console.log(err); /* handle the error */
@@ -51,16 +58,24 @@ function startVideo() {
     });
 }
 
+function muteMic() {
+    console.log(mediaStream.getTracks());
+    // mediaStream.getAudioTracks()[0].enabled = !(mediaStream.getAudioTracks()[0].enabled);
+}
+
+
 function stopVideo() {
 
+    if (videoElement.srcObject != null) {
 
-    if (video.srcObject.active) {
-        // do something with the stream
-        video.srcObject.getTracks().forEach(function (track) {
-            console.log(track.label);
-            track.stop();
-        });
-        video.srcObject = null;
-        video.pause();
+        if (videoElement.srcObject.active) {
+            // do something with the stream
+            videoElement.srcObject.getTracks().forEach(function (track) {
+                console.log(track.label);
+                track.stop();
+            });
+            videoElement.srcObject = null;
+            videoElement.pause();
+        }
     }
 }

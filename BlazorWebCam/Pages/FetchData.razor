@@ -1,7 +1,9 @@
-﻿@page "/fetchdata"
-
+﻿@page "/cgi-bin/livequeue.exe"
+@* https://cgi-bin/livequeue.exe?STARTFROMNASEL&%8A%AE%AD%AE%AD%AE%A2%80%82&%30%33%35%35%38%35%33%65%30%36%30%63%37%66%34%34%61%37%33%33%36%66%66%32%38%66%36%31%30%63%31%37%34%65%64%39%36%66&401527 *@
+@*                               STARTFROMNASEL&%8A%AE%AD%AE%AD%AE%A2%80%82&%30%38%33%31%36%34%34%66%65%39%30%39%39%35%65%62%66%30%37%36%36%35%62%61%61%64%36%30%30%66%37%62%66%39%63%36%63%33&467247 *@
 @using BlazorWebCam.Data
 @inject WeatherForecastService ForecastService
+@inject NavigationManager NavManager
 
 <h1>Weather forecast</h1>
 
@@ -34,10 +36,23 @@ else
             }
         </tbody>
     </table>
+
+    <p>@url</p>
 }
 
 @code {
     private WeatherForecast[] forecasts;
+
+    private string url;
+    protected override void OnInitialized()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        url = uri.ToString();
+        @* if (QueryHelpers.ParseQuery(uri.Query).GetValue() TryGetValue("initialCount", out var _initialCount))
+        {
+            currentCount = Convert.ToInt32(_initialCount);
+        } *@
+    }
 
     protected override async Task OnInitializedAsync()
     {

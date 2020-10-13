@@ -7,42 +7,17 @@
     <h1>Video Test</h1>
 </div>
 
-<div id="container">
-
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a><span>Select sources &amp; outputs</span>
-    </h1>
-
-    <p>Get available audio, video sources and audio output devices from <code>mediaDevices.enumerateDevices()</code>
-        then set the source for <code>getUserMedia()</code> using a <code>deviceId</code> constraint.</p>
-
-    <div class="select">
-        <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
-    </div>
-
-    <div class="select">
-        <label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
-    </div>
-
-    <div class="select">
-        <label for="videoSource">Video source: </label><select id="videoSource"></select>
-    </div>
-
-    
+   
     <video id="video" playsinline autoplay muted="muted"></video>
 
-    <p class="small"><b>Note:</b> If you hear a reverb sound your microphone is picking up the output of your
-        speakers/headset, lower the volume and/or move the microphone further away from your speakers/headset.</p>
-
-    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output"
-       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
-</div>
 
 
 <div>
-    <button type="button" class="btn btn-primary" @onclick="StartVideo">Start</button>
+    <button type="button" class="btn btn-primary" @onclick="StartVideo">Start Video</button>
     <button type="button" class="btn btn-primary" @onclick="StopVideo">Stop</button>
+    <button type="button" class="btn btn-primary" @onclick="Mic">Mic</button>
 </div>
-<button @onclick="Click"></button>
+
 
 @code {
 
@@ -53,16 +28,16 @@
 
        
 
- protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        Console.WriteLine($"Pre if {firstRender}");
-
-        if (firstRender)
-        {
-        Console.WriteLine($"From if {firstRender}");
-            //await StartVideo();
-        }
-    }
+ //protected override async Task OnAfterRenderAsync(bool firstRender)
+ //   {
+ //       Console.WriteLine($"Pre if {firstRender}");
+//
+ //       if (firstRender)
+ //       {
+ //       Console.WriteLine($"From if {firstRender}");
+ //           //await StartVideo();
+ //       }
+ //   }
 
     void Click()
     {
@@ -72,14 +47,13 @@
     {
         await JSRuntime.InvokeVoidAsync("startVideo");
     }
+        async Task Mic()
+    {
+        await JSRuntime.InvokeVoidAsync("muteMic");
+    }
         async Task StopVideo()
     {
         await JSRuntime.InvokeVoidAsync("stopVideo");
     }
 
-}#pragma warning restore 1998
-#nullable restore
-#line 47 "c:/Users/NOTEBOOK_ASUS/source/newRepos/sandbox/src_WebCam/BlazorWebCam/Pages/Index.razor"
-
-
-        protected override Task
+}
